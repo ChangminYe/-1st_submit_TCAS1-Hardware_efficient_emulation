@@ -1,0 +1,49 @@
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table*}[b]\centering
+\begin{threeparttable}\small
+\begin{tabular}[ht]{p{8cm}p{9cm}}\toprule
+    \multicolumn{2}{p{17cm}}{\textbf{Algorithm 2:} Updation of effective membrane potential UM0 and auxiliary functions (U1, U2, U3) on a given time step}\\ \midrule
+    \multicolumn{2}{p{17cm}}{\textbf{Input:} Input spike SP\textunderscore IN (=0 when no input spike, and 1 otherwise), timing of the last input spike $\hat{t_j}$, and U1 and U2 on the previous time step} \\
+    \multicolumn{2}{p{17cm}}{\textbf{Output:} Output spike SP\textunderscore OUT (=0 when no output spike, and 1 otherwise), timing of the last output spike $\hat{t_i}$, and UM0, U1, U2, and U3 on the current time step}\\ \midrule
+    
+    Evaluate $u_\textrm{m}$, $u_\textrm{1}$, $u_\textrm{2}$, $u_\textrm{3}$ on time step $t$:\\
+    $\hat{t_j}$ $\leftarrow$ $\hat{t_j}$ + ($t$ - $\hat{t_j}$)$\cdot$SP\textunderscore IN \\
+    SP\textunderscore OUT $\leftarrow$ 1 \\
+    PRE1 $\leftarrow$ (U1[$t$-1] + $\tau_\textrm{m}$$\cdot$[($\tau_\textrm{m}$ - $\tau_\textrm{s}$)$\cdot$$\mathrm{\lvert}$$u_\textrm{hyp}$$\mathrm{\lvert}$]$^\textrm{-1}$$\cdot$$w_{ij}$)$\cdot$SP\textunderscore IN & // Instruction 1 \\
+    U1[$t$] $\leftarrow$ PRE1$\cdot$Y\textunderscore FIX1[$t$-$\hat{t_j}$] &// Instruction 2 \\
+    PRE2 $\leftarrow$ (U2[$t$-1] + $\tau_\textrm{m}$$\cdot$[($\tau_\textrm{m}$ - $\tau_\textrm{s}$)$\cdot$$\mathrm{\lvert}$$u_\textrm{hyp}$$\mathrm{\lvert}$]$^\textrm{-1}$$\cdot$$w_{ij}$)$\cdot$SP\textunderscore IN \\
+    U2[$t$] $\leftarrow$ PRE2$\cdot$Y\textunderscore FIX2[$t$-$\hat{t_j}$]\\
+    U3[$t$] $\leftarrow$ Y\textunderscore FIX3[$t$-$\hat{t_i}$] &// Instruction 4\\
+    \textbf{if} UM0[$t$]$\geq$UTH0+U3[$t$] \textbf{then} &// Instruction 5 \\
+        ~~~SP\textunderscore OUT $\leftarrow$ 1\\
+        ~~~$\hat{t_i} \leftarrow t$\\
+        ~~~PRE1 $\leftarrow$ 0\\
+        ~~~PRE2 $\leftarrow$ 0\\
+\textbf{end if}\\\bottomrule
+\end{tabular}
+\end{threeparttable}
+\end{table*} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[!b]\centering
+\caption{\label{tab:tab3} hardware requirements and power consumption of the Three-EXP\textunderscore FIX and Two-EXP\textunderscore FIX architectures}
+\renewcommand{\arraystretch}{1.15} 
+\begin{threeparttable}\small
+\begin{tabular}[ht]{lcc}\toprule \toprule
+    \textbf{Utilization metrics} &\textbf{Three-TS-EFA} &\textbf{Two-TS-EFA}\\\midrule
+    \textbf{Hardware} & &\\
+    ~~LUTs as Logic &335 &314\\
+    ~~DSP slice &5 &4\\
+    ~~Memory &1,179$\times$64b &1,003$\times$64b \\
+    \textbf{Energy} & &\\
+    ~~Clock speed &50 MHz& 50\&100 MHz  \\
+    ~~On-chip power estimation &0.362 W &0.451 W \\
+\bottomrule \bottomrule
+\end{tabular}
+\end{threeparttable}
+\end{table}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
